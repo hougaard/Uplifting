@@ -1,0 +1,26 @@
+{
+  "id": "25222d05-0e26-4988-b6ca-d20cd9bfe0e0",
+  "name": "Uplifting",
+  "publisher": "hougaard.com",
+  "version": "1.0.0.0",
+  "brief": "",
+  "description": "",
+  "privacyStatement": "",
+  "EULA": "",
+  "help": "",
+  "url": "",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "14.0.0.0",
+  "application": "14.0.0.0",
+  "idRanges": [
+    {
+      "from": 50100,
+      "to": 50149
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://hougaard.com/uplifting/",
+  "showMyCode": true,
+  "runtime": "3.0"
+}

@@ -16,8 +16,8 @@
   "application": "14.0.0.0",
   "idRanges": [
     {
-      "from": 50100,
-      "to": 50149
+      "from": 99999,
+      "to": 99999
     }
   ],
   "contextSensitiveHelpUrl": "https://hougaard.com/uplifting/",

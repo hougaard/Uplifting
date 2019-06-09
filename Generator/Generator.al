@@ -1,4 +1,4 @@
-page 50101 "Uplift Generator"
+page 99999 "Uplift Generator"
 {
     PageType = NavigatePage;
     SourceTable = AllObj;
@@ -88,7 +88,7 @@ page 50101 "Uplift Generator"
             DownloadFromStream(InS, 'Save SQL Script', '', '', FileName);
             if confirm('Step 1 download done?') then;
             // Step2
-            SQL1.AddText(GenerateFieldsScript(2));
+            SQL2.AddText(GenerateFieldsScript(2));
             B.INIT;
             B.BLob.CreateOutStream(OutS);
             SQL2.Write(OutS);
@@ -97,6 +97,7 @@ page 50101 "Uplift Generator"
             DownloadFromStream(InS, 'Save SQL Script', '', '', FileName);
             if confirm('Step 2 download done?') then;
             // Step3
+            SQL3.AddText(GenerateFieldsScript(3));
             B.INIT;
             B.BLob.CreateOutStream(OutS);
             SQL3.Write(OutS);
@@ -191,22 +192,10 @@ page 50101 "Uplift Generator"
                 Exit('UPDATE [' + TableExtensionName + '] SET ' + LF +
                      FieldTransferList +
                      ' FROM [' + NewTableName + '] WHERE ' +
-                     PrimaryKeyTransferList);
+                     PrimaryKeyTransferList + ';' + LF);
+            3:
+                Exit('DROP TABLE [' + NewTableName + '];');
         end;
-    end;
-
-    procedure UpdateExtensionTables()
-    begin
-
-        /*
-        update [CRONUS Canada, Inc_$Customer$43da8c87-a149-4e49-9403-6892d9e90e62]
-set [CRONUS Canada, Inc_$Customer$43da8c87-a149-4e49-9403-6892d9e90e62].[Extra Info] = [CRONUS Canada, Inc_$Customer.new].[Extra Info],
-	[CRONUS Canada, Inc_$Customer$43da8c87-a149-4e49-9403-6892d9e90e62].Rating = [CRONUS Canada, Inc_$Customer.new].Rating,
-	[CRONUS Canada, Inc_$Customer$43da8c87-a149-4e49-9403-6892d9e90e62].[Credit Limit] = [CRONUS Canada, Inc_$Customer.new].[Credit Limit]
-	From [dbo].[CRONUS Canada, Inc_$Customer.new]
-	WHERE [CRONUS Canada, Inc_$Customer.new].[No_] = [CRONUS Canada, Inc_$Customer$43da8c87-a149-4e49-9403-6892d9e90e62].[No_]
-
-        */
     end;
 
     procedure SQLTable(Company: Text; TableName: Text; Step: Integer): Text;

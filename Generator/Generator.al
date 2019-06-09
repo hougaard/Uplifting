@@ -169,7 +169,7 @@ page 99999 "Uplift Generator"
             FRef := KeyRef.FieldIndex(i);
             FieldListStr += '[' + ConvertName(FRef.Name) + ']';
             if PrimaryKeyTransferList <> '' then
-                PrimaryKeyTransferList += ',';
+                PrimaryKeyTransferList += LF + ',';
             PrimaryKeyTransferList += '[' + NewTableName + '].[' + ConvertName(FRef.Name) + ']=[' +
                                       TableExtensionName + '].[' + ConvertName(FRef.Name) + ']';
         END;
@@ -179,7 +179,7 @@ page 99999 "Uplift Generator"
             FieldList.Get(i, FieldName);
             FieldListStr += '[' + ConvertName(FieldName) + ']';
             if FieldTransferList <> '' then
-                FieldTransferList += ',';
+                FieldTransferList += LF + ',';
             FieldTransferList += '[' + TableExtensionName + '].[' + ConvertName(FieldName) + ']=[' +
                                       NewTableName + '].[' + ConvertName(FieldName) + ']';
         end;
@@ -190,7 +190,7 @@ page 99999 "Uplift Generator"
                     TableName + '];' + LF);
             2:
                 Exit('UPDATE [' + TableExtensionName + '] SET ' + LF +
-                     FieldTransferList +
+                     FieldTransferList + LF +
                      ' FROM [' + NewTableName + '] WHERE ' +
                      PrimaryKeyTransferList + ';' + LF);
             3:

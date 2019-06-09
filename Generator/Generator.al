@@ -180,8 +180,8 @@ page 99999 "Uplift Generator"
             FieldListStr += '[' + ConvertName(FieldName) + ']';
             if FieldTransferList <> '' then
                 FieldTransferList += ',';
-            FieldTransferList += '[' + TableExtensionName + '].[' + ConvertName(FRef.Name) + ']=[' +
-                                      NewTableName + '].[' + ConvertName(FRef.Name) + ']';
+            FieldTransferList += '[' + TableExtensionName + '].[' + ConvertName(FieldName) + ']=[' +
+                                      NewTableName + '].[' + ConvertName(FieldName) + ']';
         end;
         case Step of
             1:

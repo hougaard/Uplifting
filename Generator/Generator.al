@@ -194,7 +194,7 @@ page 99999 "Uplift Generator"
                      ' FROM [' + NewTableName + '] WHERE ' +
                      PrimaryKeyTransferList + ';' + LF);
             3:
-                Exit('DROP TABLE [' + NewTableName + '];');
+                Exit('DROP TABLE [' + NewTableName + '];' + LF);
         end;
     end;
 

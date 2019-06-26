@@ -72,9 +72,9 @@ page 99999 "Uplift Generator"
                 CurrPage.SetSelectionFilter(Tables);
                 if Tables.FINDSET then
                     repeat
-                        SQL1.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Rec."Object Name"), 1));
-                        SQL2.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Rec."Object Name"), 2));
-                        SQL3.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Rec."Object Name"), 3));
+                        SQL1.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 1));
+                        SQL2.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 2));
+                        SQL3.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 3));
                     until Tables.NEXT = 0;
             until Company.next = 0;
         if SQL1.Length > 0 then begin
@@ -124,7 +124,7 @@ page 99999 "Uplift Generator"
                         if Company.FINDSET THEN
                             repeat
                                 // Generate script for table
-                                SQL += GenerateTableFields(F, Company, FieldList, Step);
+                                SQL += GenerateTableFields(CurrentTable, Company, FieldList, Step);
                             until Company.next = 0;
                     end;
                     CLEAR(FieldList);
@@ -136,12 +136,12 @@ page 99999 "Uplift Generator"
             if Company.FINDSET THEN
                 repeat
                     // Generate script for table
-                    SQL += GenerateTableFields(F, Company, FieldList, Step);
+                    SQL += GenerateTableFields(CurrentTable, Company, FieldList, Step);
                 until Company.next = 0;
         exit(SQL);
     end;
 
-    procedure GenerateTableFields(var F: Record Field;
+    procedure GenerateTableFields(CurrentTableNo: Integer;
                                   var Company: Record Company;
                                   var FieldList: List of [Text];
                                   Step: Integer): Text
@@ -158,7 +158,7 @@ page 99999 "Uplift Generator"
         PrimaryKeyTransferList: Text;
         FieldTransferList: Text;
     begin
-        RecRef.OPEN(F.TableNo);
+        RecRef.OPEN(CurrentTableNo);
         NewTableName := ConvertName(Company.Name) + '$' + ConvertName(RecRef.Name) + '.new';
         TableName := ConvertName(Company.Name) + '$' + ConvertName(RecRef.Name);
         TableExtensionName := ConvertName(Company.Name) + '$' + ConvertName(RecRef.Name) + '$' + ExtensionGUID;
@@ -169,9 +169,9 @@ page 99999 "Uplift Generator"
             FRef := KeyRef.FieldIndex(i);
             FieldListStr += '[' + ConvertName(FRef.Name) + ']';
             if PrimaryKeyTransferList <> '' then
-                PrimaryKeyTransferList += LF + ',';
-            PrimaryKeyTransferList += '[' + NewTableName + '].[' + ConvertName(FRef.Name) + ']=[' +
-                                      TableExtensionName + '].[' + ConvertName(FRef.Name) + ']';
+                PrimaryKeyTransferList += LF + ' and ';
+            PrimaryKeyTransferList += '([' + NewTableName + '].[' + ConvertName(FRef.Name) + ']=[' +
+                                      TableExtensionName + '].[' + ConvertName(FRef.Name) + '])';
         END;
         for i := 1 to FieldList.Count do begin
             if FieldListStr <> '' then

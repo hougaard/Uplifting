@@ -2,9 +2,9 @@ page 99999 "Uplift Generator"
 {
     PageType = NavigatePage;
     SourceTable = AllObj;
-    SourceTableView = WHERE ("Object Type" = filter (Table),
-                             "App Package ID" = filter ('{00000000-0000-0000-0000-000000000000}'),
-                             "Object ID" = filter ('50000..2000000000'));
+    SourceTableView = WHERE("Object Type" = filter(Table),
+                             "App Package ID" = filter('{00000000-0000-0000-0000-000000000000}'),
+                             "Object ID" = filter('50000..2000000000'));
     Editable = true;
     UsageCategory = Administration;
     ApplicationArea = All;
@@ -117,6 +117,7 @@ page 99999 "Uplift Generator"
     begin
         F.SETFILTER("No.", FieldNumberFilter);
         F.SETFILTER(TableNo, '1..49999|99000750..99009999');
+        F.SETRANGE(Class, F.Class::Normal);
         if f.findset then
             repeat
                 IF F.TableNo <> CurrentTable then begin
@@ -164,9 +165,9 @@ page 99999 "Uplift Generator"
         TableExtensionName := ConvertName(Company.Name) + '$' + ConvertName(RecRef.Name) + '$' + ExtensionGUID;
         KeyRef := RecRef.KeyIndex(1);
         for i := 1 to KeyRef.FieldCount DO begin
+            FRef := KeyRef.FieldIndex(i);
             if FieldListStr <> '' then
                 FieldListStr += ',';
-            FRef := KeyRef.FieldIndex(i);
             FieldListStr += '[' + ConvertName(FRef.Name) + ']';
             if PrimaryKeyTransferList <> '' then
                 PrimaryKeyTransferList += LF + ' and ';

@@ -72,11 +72,21 @@ page 99999 "Uplift Generator"
                 CurrPage.SetSelectionFilter(Tables);
                 if Tables.FINDSET then
                     repeat
-                        SQL1.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 1));
-                        SQL2.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 2));
-                        SQL3.AddText(SQLTable(ConvertName(Company.Name), ConvertName(Tables."Object Name"), 3));
+                        if DataPerCompany(tables."Object ID") then begin
+                            SQL1.AddText(SQLTable(ConvertName(Company.Name) + '$', ConvertName(Tables."Object Name"), 1));
+                            SQL2.AddText(SQLTable(ConvertName(Company.Name) + '$', ConvertName(Tables."Object Name"), 2));
+                            SQL3.AddText(SQLTable(ConvertName(Company.Name) + '$', ConvertName(Tables."Object Name"), 3));
+                        end;
                     until Tables.NEXT = 0;
             until Company.next = 0;
+        if Tables.FINDSET then
+            repeat
+                if NOT DataPerCompany(tables."Object ID") then begin
+                    SQL1.AddText(SQLTable('', ConvertName(Tables."Object Name"), 1));
+                    SQL2.AddText(SQLTable('', ConvertName(Tables."Object Name"), 2));
+                    SQL3.AddText(SQLTable('', ConvertName(Tables."Object Name"), 3));
+                end;
+            until Tables.NEXT = 0;
         if SQL1.Length > 0 then begin
             // Step1
             SQL1.AddText(GenerateFieldsScript(1));
@@ -205,35 +215,35 @@ page 99999 "Uplift Generator"
             1:
                 exit(
                 'exec sp_rename ''' +
-                Company + '$' +
+                Company +
                 TableName + ''',''' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + '.bak'';' + LF + 'Select * Into [' +
-                Company + '$' +
+                Company +
                 TableName + '] From [' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGuid + '.bak] Where 1 = 2;' + LF);
             2:
                 exit(
                 'exec sp_rename ''[' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + ']'',''' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + '.bak2'';' + LF +
                 'exec sp_rename ''[' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + '.bak]'',''' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + ''';' + LF);
             3:
                 exit('DROP TABLE [' +
-                Company + '$' +
+                Company +
                 TableName + '$' +
                 ExtensionGUID + '.bak2];' + LF);
         end;
@@ -250,6 +260,14 @@ page 99999 "Uplift Generator"
                 Name[i] := '_';
         end;
         exit(Name);
+    end;
+
+    procedure DataPerCompany(TableID: Integer): boolean
+    var
+        TableMetadata: record "Table Metadata";
+    begin
+        TableMetadata.get(TableID);
+        exit(TableMetadata.DataPerCompany)
     end;
 
     var
